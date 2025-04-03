@@ -27,7 +27,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
+    queryset = Category.objects.all().order_by('id')  # Add ordering here
     serializer_class = CategorySerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
@@ -38,7 +38,16 @@ class CategoryViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [permissions.IsAdminUser]
         return [permission() for permission in permission_classes]
-
+class InventoryItemViewSet(viewsets.ModelViewSet):
+    serializer_class = InventoryItemSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['category']
+    search_fields = ['name', 'description']
+    ordering_fields = ['name', 'price', 'quantity', 'date_added']
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    
+      # Add ordering here
+   
 class InventoryItemViewSet(viewsets.ModelViewSet):
     serializer_class = InventoryItemSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
@@ -48,7 +57,7 @@ class InventoryItemViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     
     def get_queryset(self):
-        return InventoryItem.objects.filter(user=self.request.user)
+        return InventoryItem.objects.filter(user=self.request.user).order_by('id')
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
