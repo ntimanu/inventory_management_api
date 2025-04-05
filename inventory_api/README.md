@@ -14,9 +14,12 @@ A Django REST Framework API for managing inventory items, tracking stock levels,
 
 - Django 4.x
 - Django REST Framework
-- PostgreSQL
+- SQLite
 - JWT Authentication
-- Deployed on Heroku
+- Deployed on PyhtonEverywhere
+
+## Live Link:
+https://ntimanu.pythonanywhere.com/api/
 
 ## Installation
 
